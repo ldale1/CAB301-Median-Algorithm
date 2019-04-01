@@ -15,7 +15,7 @@ namespace MedianAlgorithm
         public static double BruteForceMedian(double[] A)
         {
             int n = A.Length;
-            double k = Math.Abs(n / 2.0);
+            double k = Math.Ceiling(n / 2.0);
 
             // Look at each element in the input array
             for (int i = 0; i < n; i++)
@@ -46,7 +46,7 @@ namespace MedianAlgorithm
                     return A[i];
                 }
             }
-            throw new ArgumentException("Something went wrong");
+            throw new ArgumentException("Array must contain some values");
         }
 
 

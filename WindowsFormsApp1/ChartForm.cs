@@ -22,6 +22,12 @@ namespace WindowsFormsApp1
 
         private void ChartForm_Load(object sender, EventArgs e)
         {
+            // Add a title to the chart
+            Title chtTitle = new Title("Algorithm Efficiency", Docking.Top, new Font("Arial", 16), Color.Black);
+            chtTitle.Name = "MyTitle";
+            EfficiencyChart.Titles.Add(chtTitle);
+
+
             // Add some series to the chart
             var series = new Series("Points");
             series.ChartType = SeriesChartType.Point;
@@ -66,6 +72,8 @@ namespace WindowsFormsApp1
 
         private void update_chart(object sender, EventArgs e)
         {
+            EfficiencyChart.Titles["MyTitle"].Text = "Size vs Efficiency";
+
             // What values are we going to plot?
             int problemSize = (int)SizeUpDown.Value;
             int iterations = (int)DataPointsUpDown.Value;
@@ -74,12 +82,36 @@ namespace WindowsFormsApp1
             int[] x_series = Enumerable.Range(1, problemSize).ToArray();
             double[] y_count = x_series.Select(x => Median.BruteForceMedianCount(Enumerable.Range(1, x).Select(y => (double)y).ToArray())).ToArray();
             double[] y_time = x_series.Select(x => Median.BruteForceMedianTime(Enumerable.Range(1, x).Select(y => (double)y).ToArray())).ToArray();
+
+            // Get a line of best fit
             double[] y_bf = x_series.Select(x => (double)0.5*x*x).ToArray();
 
             // Plot the output of count points
             EfficiencyChart.Series["Points"].Points.DataBindXY(x_series, y_count);
             EfficiencyChart.Series["Time"].Points.DataBindXY(x_series, y_time);
             EfficiencyChart.Series["Best Fit"].Points.DataBindXY(x_series, y_bf);
+        }
+
+
+        private void save_chart(object sender, EventArgs e)
+        {
+            // Save chart
+            System.IO.MemoryStream myStream = new System.IO.MemoryStream();
+            EfficiencyChart.Serializer.Save(myStream);
+
+            EfficiencyChart.Width = 2100;
+            EfficiencyChart.Height = 1500;
+
+            // save from the chart object itself
+            EfficiencyChart.SaveImage(@"D:\MyImage1.jpg", ChartImageFormat.Png);
+
+            // save to a bitmap
+            Bitmap bmp = new Bitmap(2100, 1500);
+            EfficiencyChart.DrawToBitmap(bmp, new Rectangle(0, 0, 2100, 1500));
+            bmp.Save(@"D:\MyImage2.jpg");
+
+            // Reload chart
+            EfficiencyChart.Serializer.Load(myStream);
         }
     }
 }

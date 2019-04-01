@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.EfficiencyChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.SizeUpDown = new System.Windows.Forms.NumericUpDown();
             this.SizeLabel = new System.Windows.Forms.Label();
             this.ReloadButton = new System.Windows.Forms.Button();
-            this.TitleLabel = new System.Windows.Forms.Label();
             this.DataPointsLabel = new System.Windows.Forms.Label();
             this.DataPointsUpDown = new System.Windows.Forms.NumericUpDown();
+            this.SaveButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.EfficiencyChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SizeUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DataPointsUpDown)).BeginInit();
@@ -47,14 +47,13 @@
             this.EfficiencyChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.EfficiencyChart.BackColor = System.Drawing.Color.Transparent;
-            chartArea6.Name = "ChartArea1";
-            this.EfficiencyChart.ChartAreas.Add(chartArea6);
-            legend6.Name = "Legend1";
-            this.EfficiencyChart.Legends.Add(legend6);
-            this.EfficiencyChart.Location = new System.Drawing.Point(144, 34);
+            chartArea1.Name = "ChartArea1";
+            this.EfficiencyChart.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.EfficiencyChart.Legends.Add(legend1);
+            this.EfficiencyChart.Location = new System.Drawing.Point(144, 12);
             this.EfficiencyChart.Name = "EfficiencyChart";
-            this.EfficiencyChart.Size = new System.Drawing.Size(431, 312);
+            this.EfficiencyChart.Size = new System.Drawing.Size(431, 352);
             this.EfficiencyChart.TabIndex = 0;
             this.EfficiencyChart.Text = "chart1";
             // 
@@ -94,20 +93,6 @@
             this.ReloadButton.UseVisualStyleBackColor = true;
             this.ReloadButton.Click += new System.EventHandler(this.update_chart);
             // 
-            // TitleLabel
-            // 
-            this.TitleLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.TitleLabel.AutoSize = true;
-            this.TitleLabel.BackColor = System.Drawing.Color.Transparent;
-            this.TitleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TitleLabel.Location = new System.Drawing.Point(158, 9);
-            this.TitleLabel.Name = "TitleLabel";
-            this.TitleLabel.Size = new System.Drawing.Size(208, 20);
-            this.TitleLabel.TabIndex = 7;
-            this.TitleLabel.Text = "Size vs Basic Operations";
-            // 
             // DataPointsLabel
             // 
             this.DataPointsLabel.AutoSize = true;
@@ -129,15 +114,25 @@
             0,
             0});
             // 
+            // SaveButton
+            // 
+            this.SaveButton.Location = new System.Drawing.Point(44, 209);
+            this.SaveButton.Name = "SaveButton";
+            this.SaveButton.Size = new System.Drawing.Size(51, 21);
+            this.SaveButton.TabIndex = 10;
+            this.SaveButton.Text = "Save";
+            this.SaveButton.UseVisualStyleBackColor = true;
+            this.SaveButton.Click += new System.EventHandler(this.save_chart);
+            // 
             // ChartForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(598, 358);
+            this.ClientSize = new System.Drawing.Size(598, 376);
+            this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.DataPointsLabel);
             this.Controls.Add(this.DataPointsUpDown);
-            this.Controls.Add(this.TitleLabel);
             this.Controls.Add(this.ReloadButton);
             this.Controls.Add(this.SizeLabel);
             this.Controls.Add(this.SizeUpDown);
@@ -159,9 +154,9 @@
         private System.Windows.Forms.NumericUpDown SizeUpDown;
         private System.Windows.Forms.Label SizeLabel;
         private System.Windows.Forms.Button ReloadButton;
-        private System.Windows.Forms.Label TitleLabel;
         private System.Windows.Forms.Label DataPointsLabel;
         private System.Windows.Forms.NumericUpDown DataPointsUpDown;
+        private System.Windows.Forms.Button SaveButton;
     }
 }
 

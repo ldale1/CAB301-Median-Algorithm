@@ -7,12 +7,27 @@ namespace MedianTests
     [TestClass]
     public class ValueTests
     {
+
+        /// Returns the median value in a given array A of n numbers. 
+        /// This i the kth element, where k =|n/2|, if the array was sorte
+
+
+
         [TestMethod]
-        public void evenSequence()
+        [ExpectedException(typeof(ArgumentException), "Array must contain some values")]
+        public void emptySequence()
         {
-            double[] simpleMedian = new double[] { 1, 2, 3, 4, 5 };
-            double output = Median.BruteForceMedian(simpleMedian);
-            double expected = 3;
+            double[] testInput = new double[] { };
+            double output = Median.BruteForceMedian(testInput);
+        }
+
+
+        [TestMethod]
+        public void singleSequence()
+        {
+            double[] testInput = new double[] { 1 };
+            double output = Median.BruteForceMedian(testInput);
+            double expected = 1;
 
             Assert.AreEqual(expected, output);
         }
@@ -20,19 +35,19 @@ namespace MedianTests
         [TestMethod]
         public void oddSequence()
         {
-            double[] simpleMedian = new double[] { 1, 2, 3, 4, 5, 6 };
-            double output = Median.BruteForceMedian(simpleMedian);
-            double expected = 3.5;
+            double[] testInput = new double[] { 1, 2, 3, 4, 5 };
+            double output = Median.BruteForceMedian(testInput);
+            double expected = 3;
 
             Assert.AreEqual(expected, output);
         }
 
         [TestMethod]
-        public void singleSequence()
+        public void evenSequence()
         {
-            double[] simpleMedian = new double[] { 1 };
-            double output = Median.BruteForceMedian(simpleMedian);
-            double expected = 1;
+            double[] testInput = new double[] { 1, 2, 3, 4, 5, 6 };
+            double output = Median.BruteForceMedian(testInput);
+            double expected = 3.5;
 
             Assert.AreEqual(expected, output);
         }
@@ -40,18 +55,18 @@ namespace MedianTests
         [TestMethod]
         public void floatSequence()
         {
-            double[] simpleMedian = new double[] { 0.1, 0.2, 0.3, 0.4, 0.5 };
-            double output = Median.BruteForceMedian(simpleMedian);
+            double[] testInput = new double[] { 0.1, 0.2, 0.3, 0.4, 0.5 };
+            double output = Median.BruteForceMedian(testInput);
             double expected = 0.3;
 
             Assert.AreEqual(expected, output);
         }
 
         [TestMethod]
-        public void reverseSequence()
+        public void sequenceDescending()
         {
-            double[] simpleMedian = new double[] { 5, 4, 3, 2, 1 };
-            double output = Median.BruteForceMedian(simpleMedian);
+            double[] testInput = new double[] { 5, 4, 3, 2, 1 };
+            double output = Median.BruteForceMedian(testInput);
             double expected = 3;
 
             Assert.AreEqual(expected, output);
@@ -60,19 +75,29 @@ namespace MedianTests
         [TestMethod]
         public void negativeSequence()
         {
-            double[] simpleMedian = new double[] { -1, -2, -3, -4, -5 };
-            double output = Median.BruteForceMedian(simpleMedian);
+            double[] testInput = new double[] { -1, -2, -3, -4, -5 };
+            double output = Median.BruteForceMedian(testInput);
             double expected = -3;
 
             Assert.AreEqual(expected, output);
         }
 
         [TestMethod]
-        public void negativeSequenceReverse()
+        public void negativeSequenceAscending()
         {
-            double[] simpleMedian = new double[] { -1, -2, -3, -4, -5 };
-            double output = Median.BruteForceMedian(simpleMedian);
+            double[] testInput = new double[] { -5, -4, -3, -2, -1 };
+            double output = Median.BruteForceMedian(testInput);
             double expected = -3;
+
+            Assert.AreEqual(expected, output);
+        }
+
+        [TestMethod]
+        public void mixedSequence()
+        {
+            double[] testInput = new double[] { -3, -2, -1, 0, 1, 2, 3 };
+            double output = Median.BruteForceMedian(testInput);
+            double expected = 0;
 
             Assert.AreEqual(expected, output);
         }
@@ -80,8 +105,8 @@ namespace MedianTests
         [TestMethod]
         public void frontLoaded()
         {
-            double[] simpleMedian = new double[] { 1, 1, 1, 1, 5 };
-            double output = Median.BruteForceMedian(simpleMedian);
+            double[] testInput = new double[] { 5, 1, 1, 1, 1 };
+            double output = Median.BruteForceMedian(testInput);
             double expected = 1;
 
             Assert.AreEqual(expected, output);
@@ -90,8 +115,8 @@ namespace MedianTests
         [TestMethod]
         public void backLoaded()
         {
-            double[] simpleMedian = new double[] { 1, 1, 1, 1, 5 };
-            double output = Median.BruteForceMedian(simpleMedian);
+            double[] testInput = new double[] { 1, 1, 1, 1, 5 };
+            double output = Median.BruteForceMedian(testInput);
             double expected = 1;
 
             Assert.AreEqual(expected, output);
