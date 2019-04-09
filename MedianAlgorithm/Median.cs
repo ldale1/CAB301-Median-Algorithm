@@ -49,12 +49,10 @@ namespace MedianAlgorithm
             throw new ArgumentException("Array must contain some values");
         }
 
-
-
         /// <summary> Brute force method to find the median of an array  <paramref name="A"/> of n numbers. Counts basic operations. </summary>
         /// <param name="A">Array to find the median of</param>
         /// <returns>  Returns the count of basic operations performed </returns>
-        public static double BruteForceMedianCount(double[] A)
+        public static int BruteForceMedianCount(double[] A)
         {
             int counter = 0;
             int n = A.Length;
@@ -88,7 +86,6 @@ namespace MedianAlgorithm
             }
             throw new ArgumentException("Something went wrong");
         }
-
 
         /// <summary> Brute force method to find the median of an array  <paramref name="A"/> of n numbers. Counts time. </summary>
         /// <param name="A">Array to find the median of</param>

@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsApp1
+﻿namespace ChartApp
 {
     partial class ChartForm
     {
@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.EfficiencyChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.SizeUpDown = new System.Windows.Forms.NumericUpDown();
             this.SizeLabel = new System.Windows.Forms.Label();
@@ -37,6 +37,7 @@
             this.DataPointsLabel = new System.Windows.Forms.Label();
             this.DataPointsUpDown = new System.Windows.Forms.NumericUpDown();
             this.SaveButton = new System.Windows.Forms.Button();
+            this.chartCombo = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.EfficiencyChart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SizeUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DataPointsUpDown)).BeginInit();
@@ -47,10 +48,10 @@
             this.EfficiencyChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.Name = "ChartArea1";
-            this.EfficiencyChart.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.EfficiencyChart.Legends.Add(legend1);
+            chartArea3.Name = "ChartArea1";
+            this.EfficiencyChart.ChartAreas.Add(chartArea3);
+            legend3.Name = "Legend1";
+            this.EfficiencyChart.Legends.Add(legend3);
             this.EfficiencyChart.Location = new System.Drawing.Point(144, 12);
             this.EfficiencyChart.Name = "EfficiencyChart";
             this.EfficiencyChart.Size = new System.Drawing.Size(431, 352);
@@ -59,7 +60,7 @@
             // 
             // SizeUpDown
             // 
-            this.SizeUpDown.Location = new System.Drawing.Point(11, 50);
+            this.SizeUpDown.Location = new System.Drawing.Point(12, 111);
             this.SizeUpDown.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -69,7 +70,7 @@
             this.SizeUpDown.Size = new System.Drawing.Size(115, 20);
             this.SizeUpDown.TabIndex = 1;
             this.SizeUpDown.Value = new decimal(new int[] {
-            5,
+            15,
             0,
             0,
             0});
@@ -77,7 +78,7 @@
             // SizeLabel
             // 
             this.SizeLabel.AutoSize = true;
-            this.SizeLabel.Location = new System.Drawing.Point(8, 34);
+            this.SizeLabel.Location = new System.Drawing.Point(9, 95);
             this.SizeLabel.Name = "SizeLabel";
             this.SizeLabel.Size = new System.Drawing.Size(68, 13);
             this.SizeLabel.TabIndex = 2;
@@ -85,7 +86,7 @@
             // 
             // ReloadButton
             // 
-            this.ReloadButton.Location = new System.Drawing.Point(11, 162);
+            this.ReloadButton.Location = new System.Drawing.Point(12, 223);
             this.ReloadButton.Name = "ReloadButton";
             this.ReloadButton.Size = new System.Drawing.Size(115, 23);
             this.ReloadButton.TabIndex = 5;
@@ -96,7 +97,7 @@
             // DataPointsLabel
             // 
             this.DataPointsLabel.AutoSize = true;
-            this.DataPointsLabel.Location = new System.Drawing.Point(14, 91);
+            this.DataPointsLabel.Location = new System.Drawing.Point(15, 152);
             this.DataPointsLabel.Name = "DataPointsLabel";
             this.DataPointsLabel.Size = new System.Drawing.Size(62, 13);
             this.DataPointsLabel.TabIndex = 9;
@@ -104,19 +105,24 @@
             // 
             // DataPointsUpDown
             // 
-            this.DataPointsUpDown.Location = new System.Drawing.Point(12, 107);
+            this.DataPointsUpDown.Location = new System.Drawing.Point(13, 168);
+            this.DataPointsUpDown.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
             this.DataPointsUpDown.Name = "DataPointsUpDown";
             this.DataPointsUpDown.Size = new System.Drawing.Size(115, 20);
             this.DataPointsUpDown.TabIndex = 8;
             this.DataPointsUpDown.Value = new decimal(new int[] {
-            10,
+            100,
             0,
             0,
             0});
             // 
             // SaveButton
             // 
-            this.SaveButton.Location = new System.Drawing.Point(44, 209);
+            this.SaveButton.Location = new System.Drawing.Point(42, 343);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(51, 21);
             this.SaveButton.TabIndex = 10;
@@ -124,12 +130,25 @@
             this.SaveButton.UseVisualStyleBackColor = true;
             this.SaveButton.Click += new System.EventHandler(this.save_chart);
             // 
+            // chartCombo
+            // 
+            this.chartCombo.FormattingEnabled = true;
+            this.chartCombo.Items.AddRange(new object[] {
+            "Basic Ops & Time",
+            "Basic Ops",
+            "Time"});
+            this.chartCombo.Location = new System.Drawing.Point(12, 41);
+            this.chartCombo.Name = "chartCombo";
+            this.chartCombo.Size = new System.Drawing.Size(115, 21);
+            this.chartCombo.TabIndex = 11;
+            // 
             // ChartForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(598, 376);
+            this.Controls.Add(this.chartCombo);
             this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.DataPointsLabel);
             this.Controls.Add(this.DataPointsUpDown);
@@ -157,6 +176,7 @@
         private System.Windows.Forms.Label DataPointsLabel;
         private System.Windows.Forms.NumericUpDown DataPointsUpDown;
         private System.Windows.Forms.Button SaveButton;
+        private System.Windows.Forms.ComboBox chartCombo;
     }
 }
 

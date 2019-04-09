@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using MedianAlgorithm;
 
 
-namespace WindowsFormsApp1
+namespace ChartApp
 {
     static class ChartProgram
     {

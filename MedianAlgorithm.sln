@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedianAlgorithm", "MedianAl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedianTests", "UnitTesting\MedianTests.csproj", "{9A28B11A-CBDD-4E49-BE1E-57CBEC975C36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsApp1", "WindowsFormsApp1\WindowsFormsApp1.csproj", "{7C540B28-4B45-4BA0-9680-329A9F596E5B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChartApp", "ChartApp\ChartApp.csproj", "{7C540B28-4B45-4BA0-9680-329A9F596E5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
