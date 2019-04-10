@@ -35,8 +35,12 @@ namespace ChartApp
         private void ChartForm_Load(object sender, EventArgs e)
         {
             // Add a title to the chart
-            Title chtTitle = new Title("Algorithm Efficiency", Docking.Top, new Font("Arial", 16), Color.Black);
-            chtTitle.Name = "MyTitle";
+            Title chtTitle = new Title("", Docking.Top, new Font("Arial", 16), Color.Black);
+            chtTitle.Name = "Title";
+            EfficiencyChart.Titles.Add(chtTitle);
+
+            chtTitle = new Title("", Docking.Top, new Font("Arial", 8), Color.Black);
+            chtTitle.Name = "InfoTitle";
             EfficiencyChart.Titles.Add(chtTitle);
 
             // Lines for best fit series
@@ -66,8 +70,10 @@ namespace ChartApp
             chartArea.AxisX.Minimum = 0;
             chartArea.AxisY.IsMarginVisible = false;
             chartArea.AxisY.Minimum = 0;
+            chartArea.AxisY.LabelStyle.Angle = -25;
             chartArea.AxisY2.IsMarginVisible = false;
             chartArea.AxisY2.Minimum = 0;
+            chartArea.AxisY2.LabelStyle.Angle = -25;
             chartArea.AxisY2.MajorGrid.LineDashStyle = ChartDashStyle.Dash;
             chartArea.AxisY2.MajorGrid.LineColor = Color.Gray;
 
@@ -198,6 +204,7 @@ namespace ChartApp
             // What values are we going to plot?
             int problemSize = (int)SizeUpDown.Value;
             int iterations = (int)DataPointsUpDown.Value;
+            EfficiencyChart.Titles["InfoTitle"].Text = String.Format("Size: {0}, Iterations: {1}", problemSize, iterations);
             int[] x_series = Enumerable.Range(1, problemSize).ToArray();
 
             // Update
@@ -205,23 +212,22 @@ namespace ChartApp
             if (chartCombo.SelectedIndex == (int)ComboEnum.BOTH)
             {
                 // Formatting
-                EfficiencyChart.Titles["MyTitle"].Text = "Size vs Basic Ops and Time";
+                EfficiencyChart.Titles["Title"].Text = "Size vs Basic Ops and Time";
 
                 // Enable secondary
                 secondary_toggle(true);
 
                 // Bind to the secondary axis
                 double[] y1 = (from size in Enumerable.Range(1, problemSize) select MedianOps.countBasics(size, iterations)).ToArray();
-                double[] y2 = (from size in Enumerable.Range(1, problemSize) select MedianOps.countTime(size, iterations)).ToArray();
-
                 axis_bind(y1, "Basic Ops", "Count", AxisType.Primary);
+                double[] y2 = (from size in Enumerable.Range(1, problemSize) select MedianOps.countTime(size, iterations)).ToArray();
                 axis_bind(y2, "Time", "Time (us)", AxisType.Secondary);
             }
             else
             {
                 // Labelling
                 String subtitle = (chartCombo.SelectedIndex == (int)ComboEnum.BASIC) ? "Basic Ops" : "Time";
-                EfficiencyChart.Titles["MyTitle"].Text = String.Format("Size vs {0}", subtitle);
+                EfficiencyChart.Titles["Title"].Text = String.Format("Size vs {0}", subtitle);
                 String axistitle = (chartCombo.SelectedIndex == (int)ComboEnum.BASIC) ? "Count" : "Time [us]";
 
                 // Toggle off the secondary axis
@@ -236,6 +242,7 @@ namespace ChartApp
             }
         }
 
+        // Save functionality
         private void save_chart(object sender, EventArgs e)
         {
             // Open a save box
@@ -248,24 +255,40 @@ namespace ChartApp
 
             if (saveDialog.ShowDialog() == DialogResult.OK)
             {
-                int newWidth = 2100;
-                int newHeight = 1500;
-
                 // Save chart
                 MemoryStream myStream = new MemoryStream();
                 EfficiencyChart.Serializer.Save(myStream);
 
-                // Update chart display to make look nice
-                EfficiencyChart.Width = newWidth;
-                EfficiencyChart.Height = newHeight;
-
                 // Save from the chart object itself
                 EfficiencyChart.SaveImage(saveDialog.FileName, ChartImageFormat.Png);
 
+                
+                /* Get a consistent output */
+                // Fonts
+                float fontscaler = 0.6f;
+                EfficiencyChart.Titles["Title"].Font = new Font("Arial", 48 * fontscaler, FontStyle.Bold);
+                EfficiencyChart.Titles["InfoTitle"].Font = new Font("Arial", 24 * fontscaler);
+                ChartArea chartArea = EfficiencyChart.ChartAreas[0];
+                Font tickFont = new Font("Arial", 24 * fontscaler, FontStyle.Bold);
+                chartArea.AxisX.LabelStyle.Font = tickFont;
+                chartArea.AxisY.LabelStyle.Font = tickFont;
+                chartArea.AxisY2.LabelStyle.Font = tickFont;
+                Font labelFont = new Font("Arial", 32 * fontscaler, FontStyle.Bold);
+                chartArea.AxisX.TitleFont = labelFont;
+                chartArea.AxisY.TitleFont = labelFont;
+                chartArea.AxisY2.TitleFont = labelFont;
+                EfficiencyChart.Legends[0].Font = new Font("Arial", 28 * fontscaler);
+
+                // Higher resolution
+                int newWidth = 1600;
+                int newHeight = 900;
+                EfficiencyChart.Width = newWidth;
+                EfficiencyChart.Height = newHeight;
+
                 // Save to a bitmap
-                Bitmap bmp = new Bitmap(2100, 1500);
+                Bitmap bmp = new Bitmap(newWidth, newHeight);
                 EfficiencyChart.DrawToBitmap(bmp, new Rectangle(0, 0, newWidth, newHeight));
-                //bmp.Save(@"D:\MyImage2.jpg");
+                bmp.Save(saveDialog.FileName.Split('.')[0] + "-hires.png");
 
                 // Reload chart
                 EfficiencyChart.Serializer.Load(myStream);
