@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.EfficiencyChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.SizeUpDown = new System.Windows.Forms.NumericUpDown();
             this.SizeLabel = new System.Windows.Forms.Label();
@@ -48,10 +48,10 @@
             this.EfficiencyChart.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea3.Name = "ChartArea1";
-            this.EfficiencyChart.ChartAreas.Add(chartArea3);
-            legend3.Name = "Legend1";
-            this.EfficiencyChart.Legends.Add(legend3);
+            chartArea1.Name = "ChartArea1";
+            this.EfficiencyChart.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.EfficiencyChart.Legends.Add(legend1);
             this.EfficiencyChart.Location = new System.Drawing.Point(144, 12);
             this.EfficiencyChart.Name = "EfficiencyChart";
             this.EfficiencyChart.Size = new System.Drawing.Size(431, 352);
@@ -70,7 +70,7 @@
             this.SizeUpDown.Size = new System.Drawing.Size(115, 20);
             this.SizeUpDown.TabIndex = 1;
             this.SizeUpDown.Value = new decimal(new int[] {
-            15,
+            250,
             0,
             0,
             0});
@@ -115,7 +115,7 @@
             this.DataPointsUpDown.Size = new System.Drawing.Size(115, 20);
             this.DataPointsUpDown.TabIndex = 8;
             this.DataPointsUpDown.Value = new decimal(new int[] {
-            100,
+            200,
             0,
             0,
             0});

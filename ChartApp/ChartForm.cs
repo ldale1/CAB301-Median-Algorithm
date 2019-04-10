@@ -39,36 +39,21 @@ namespace ChartApp
             chtTitle.Name = "MyTitle";
             EfficiencyChart.Titles.Add(chtTitle);
 
-            // Add some series to the chart
-            var series = new Series("y1");
-            series.ChartType = SeriesChartType.Point;
-            EfficiencyChart.Series.Add(series);
-
-            // Plot the output of time points
-            series = new Series("y2");
-            series.ChartType = SeriesChartType.Point;
-            series.YAxisType = AxisType.Secondary;
-            EfficiencyChart.Series.Add(series);
-
-            // Add a line of best fit series
-            series = new Series("y1-oh");
-            series.ChartType = SeriesChartType.Spline;
-            EfficiencyChart.Series.Add(series);
-
-            // Add a line of best fit series
-            series = new Series("y1-omega");
-            series.ChartType = SeriesChartType.Spline;
-            EfficiencyChart.Series.Add(series);
-
-            // Add a line of best fit series
-            series = new Series("y2-oh");
-            series.ChartType = SeriesChartType.Spline;
-            EfficiencyChart.Series.Add(series);
-
-            // Add a line of best fit series
-            series = new Series("y2-omega");
-            series.ChartType = SeriesChartType.Spline;
-            EfficiencyChart.Series.Add(series);
+            // Lines for best fit series
+            Series series;
+            foreach (String seriesName in new List<String> { "y1", "y1-oh", "y1-omega", "y2", "y2-oh", "y2-omega" })
+            {
+                series = new Series(seriesName);
+                if (seriesName.IndexOf("-") < 0) {
+                    series.ChartType = SeriesChartType.Point;
+                }
+                else {
+                    series.ChartType = SeriesChartType.Spline;
+                    series.BorderWidth = 2;
+                }
+                if (seriesName.IndexOf("2") >= 0) { series.YAxisType = AxisType.Secondary;}
+                EfficiencyChart.Series.Add(series);
+            }
 
             // Format Chart Area
             ChartArea chartArea = EfficiencyChart.ChartAreas[0];
@@ -77,10 +62,14 @@ namespace ChartApp
             chartArea.AxisX.TitleFont = labelFont;
             chartArea.AxisY.TitleFont = labelFont;
             chartArea.AxisY2.TitleFont = labelFont;
+            chartArea.AxisX.IsMarginVisible = false;
+            chartArea.AxisX.Minimum = 0;
+            chartArea.AxisY.IsMarginVisible = false;
+            chartArea.AxisY.Minimum = 0;
+            chartArea.AxisY2.IsMarginVisible = false;
+            chartArea.AxisY2.Minimum = 0;
             chartArea.AxisY2.MajorGrid.LineDashStyle = ChartDashStyle.Dash;
             chartArea.AxisY2.MajorGrid.LineColor = Color.Gray;
-            chartArea.AxisX.IsMarginVisible = false;
-            chartArea.AxisY.IsMarginVisible = false;
 
             // Format Legend
             Legend legend = EfficiencyChart.Legends[0];
@@ -95,48 +84,115 @@ namespace ChartApp
         }
         
         // Put on a series or take it off
-        private void series_toggle(Series series, bool onoff)
+        private void toggle_series(Series series, bool onoff)
         {
             series.IsVisibleInLegend = onoff;
             if (!onoff) { series.Points.Clear(); }
         }
+        private void secondary_toggle(bool onoff)
+        {
+            foreach (String seriesName in new List<String> { "y2", "y2-oh", "y2-omega" })
+            {
+                toggle_series(EfficiencyChart.Series[seriesName], onoff);
+            }
+        }
+        private void axis_bind(double[] points, String subtitle, String axistitle, AxisType axisType, bool bf = true)
+        {
+            ChartArea chartArea = EfficiencyChart.ChartAreas[0];
+            String seriesName = axisType == AxisType.Primary ? "y1" : "y2";
+            // Max scale value
+            double scale = Math.Min(Math.Pow(10, (int)Math.Log10(points.Max())), 100);
+            Console.WriteLine(scale);
+            int val = (int)(Math.Ceiling(points.Max() / scale) * scale);
+            //
+            if (axisType == AxisType.Primary)
+            {
+                EfficiencyChart.ChartAreas[0].AxisY.Title = axistitle;
+                chartArea.AxisY.Maximum = val;
+            } else
+            {
+                EfficiencyChart.ChartAreas[0].AxisY2.Title = axistitle;
+                chartArea.AxisY2.Maximum = val;
+            }
 
+            // Bind to axis
+            int[] x_series = Enumerable.Range(1, points.Length).ToArray();
+            EfficiencyChart.Series[seriesName].Points.DataBindXY(x_series, points);
+            EfficiencyChart.Series[seriesName].LegendText = subtitle;
+
+            // Bestfit fit
+            if (bf)
+            {
+                toggle_series(EfficiencyChart.Series[seriesName + "-oh"], true);
+                toggle_series(EfficiencyChart.Series[seriesName + "-omega"], true);
+
+                Tuple<int[], double[]> y1_oh = bestfit_oh(points);
+                try
+                {
+                    EfficiencyChart.Series[seriesName + "-oh"].Points.DataBindXY(y1_oh.Item1, y1_oh.Item2);
+                    EfficiencyChart.Series[seriesName + "-oh"].LegendText = String.Format("O({0})", subtitle);
+                }
+                catch (Exception exc)
+                {
+                    Console.WriteLine(exc);
+                }
+
+                Tuple<int[], double[]> y1_omega = bestfit_omega(points);
+                try { 
+                    EfficiencyChart.Series[seriesName + "-omega"].Points.DataBindXY(y1_omega.Item1, y1_omega.Item2);
+                    EfficiencyChart.Series[seriesName + "-omega"].LegendText = String.Format("Ω({0})", subtitle);
+                } catch (Exception exc)
+                {
+                    Console.WriteLine(exc);
+                }
+            } else {
+                toggle_series(EfficiencyChart.Series[seriesName + "-oh"], false);
+                toggle_series(EfficiencyChart.Series[seriesName + "-omega"], false);
+            }
+        }
 
         // Upper bound
-        private double[] bestfit_oh(double[] x_series)
+        private Tuple<int[], double[]> bestfit_oh(double[] x_series)
         {
-            double g = 0.0;
-            int breakCounter = 100;
+            int startOh = Math.Max(x_series.ToList().IndexOf(x_series.Where(val => val > 0).ToArray()[0]), 0);
+            double offset = x_series[startOh];
+            x_series = x_series.Skip(startOh).Take(x_series.Length - startOh).Select(x => x - offset).ToArray();
+            double g = 0.0002;
+            int breakCounter = 10000;
             double[] vals;
             bool tuning;
             do {
-                vals = Enumerable.Range(1, x_series.Length).Select(x => g * x * x + 1).ToArray();
+                vals = Enumerable.Range(1, x_series.Length).Select(x => g * x * x + offset*0.2).ToArray();
                 tuning = vals.Where(val => val < x_series[Array.IndexOf(vals, val)]).Any(); // While any point < x_series
-                // Loop updating
-                g += 0.025;
+                g += 0.0002;
                 breakCounter--;
             } while (tuning && breakCounter > 0) ;
-            return vals;
+            return Tuple.Create(Enumerable.Range(startOh + 1, x_series.Length).ToArray(), vals.Select(x => x + offset).ToArray());
         }
         // Lower bound
-        private double[] bestfit_omega(double[] x_series)
+        private Tuple<int[], double[]> bestfit_omega(double[] x_series)
         {
-            double g = 0.65;
-            int breakCounter = 100;
+            int startOh = Math.Max(x_series.ToList().LastIndexOf(0), 0);
+            x_series = x_series.Skip(startOh).Take(x_series.Length - startOh).ToArray();
+            double g = 2;
+            int breakCounter = 1000;
             double[] vals;
             bool tuning;
             do
             {
-                vals = Enumerable.Range(1, x_series.Length).Select(x => g * x * x - 1).ToArray();
+                vals = Enumerable.Range(1, x_series.Length).Select(x => g * x * x  - 1).ToArray();
                 tuning = vals.Where(val => val > x_series[Array.IndexOf(vals, val)]).Any(); // While any point > x_series
                 // Loop updating
-                g -= 0.025;
+                g -= 0.002;
                 breakCounter--;
             } while (tuning && breakCounter > 0);
-            return vals;
+
+            Console.WriteLine(tuning);
+
+            return Tuple.Create(Enumerable.Range(startOh + 1, x_series.Length).ToArray(), vals);
         }
 
-
+        // Update the chart
         private void update_chart(object sender, EventArgs e)
         {
             // What values are we going to plot?
@@ -150,56 +206,33 @@ namespace ChartApp
             {
                 // Formatting
                 EfficiencyChart.Titles["MyTitle"].Text = "Size vs Basic Ops and Time";
-                chartArea.AxisY.Title = "Count";
-                chartArea.AxisY2.Title = "Time (ms)";
 
                 // Enable secondary
-                series_toggle(EfficiencyChart.Series["y2"], true);
-                series_toggle(EfficiencyChart.Series["y2-oh"], true);
-                series_toggle(EfficiencyChart.Series["y2-omega"], true);
+                secondary_toggle(true);
 
-                // Plot the output
-                double[] y_basic = (from size in Enumerable.Range(1, problemSize)
-                                    select MedianOps.countBasics(size, iterations)).ToArray();
-                EfficiencyChart.Series["y1"].Points.DataBindXY(x_series, y_basic);
+                // Bind to the secondary axis
+                double[] y1 = (from size in Enumerable.Range(1, problemSize) select MedianOps.countBasics(size, iterations)).ToArray();
+                double[] y2 = (from size in Enumerable.Range(1, problemSize) select MedianOps.countTime(size, iterations)).ToArray();
 
-                // Plot the output for time
-                double[] y_time = (from size in Enumerable.Range(1, problemSize)
-                                   select MedianOps.countTime(size, iterations)).ToArray();
-                EfficiencyChart.Series["y2"].Points.DataBindXY(x_series, y_time);
+                axis_bind(y1, "Basic Ops", "Count", AxisType.Primary);
+                axis_bind(y2, "Time", "Time (us)", AxisType.Secondary);
             }
             else
             {
                 // Labelling
                 String subtitle = (chartCombo.SelectedIndex == (int)ComboEnum.BASIC) ? "Basic Ops" : "Time";
                 EfficiencyChart.Titles["MyTitle"].Text = String.Format("Size vs {0}", subtitle);
-                String axistitle = (chartCombo.SelectedIndex == (int)ComboEnum.BASIC) ? "Count" : "Time [ms]";
-                chartArea.AxisY.Title = axistitle;
-
-                // Disable secondary
-                EfficiencyChart.Series["y1"].LegendText = subtitle;
-                EfficiencyChart.Series["y1-oh"].LegendText = String.Format("O({0})", subtitle);
-                EfficiencyChart.Series["y1-omega"].LegendText = String.Format("Ω({0})", subtitle);
+                String axistitle = (chartCombo.SelectedIndex == (int)ComboEnum.BASIC) ? "Count" : "Time [us]";
 
                 // Toggle off the secondary axis
-                series_toggle(EfficiencyChart.Series["y2"], false);
-                series_toggle(EfficiencyChart.Series["y2-oh"], false);
-                series_toggle(EfficiencyChart.Series["y2-omega"], false);
+                secondary_toggle(false);
 
-                EfficiencyChart.Series["y1-oh"].BorderWidth = 5;
-                EfficiencyChart.Series["y1-omega"].BorderWidth = 5;
-
-                // Plot the series
+                // Bind to the secondary axis
                 double[] y1 = (chartCombo.SelectedIndex == (int)ComboEnum.BASIC) ?
                      (from size in Enumerable.Range(1, problemSize) select MedianOps.countBasics(size, iterations)).ToArray() :
                      (from size in Enumerable.Range(1, problemSize) select MedianOps.countTime(size, iterations)).ToArray();
-                EfficiencyChart.Series["y1"].Points.DataBindXY(x_series, y1);
-
-                // Bestfit fit
-                double[] y1_oh = bestfit_oh(y1);
-                double[] y1_omega = bestfit_omega(y1);
-                //EfficiencyChart.Series["y1-oh"].Points.DataBindXY(x_series, y1_oh);
-                //EfficiencyChart.Series["y1-omega"].Points.DataBindXY(x_series, y1_omega);
+                bool bf = (chartCombo.SelectedIndex == (int)ComboEnum.BASIC);
+                axis_bind(y1, subtitle, axistitle, AxisType.Primary);
             }
         }
 

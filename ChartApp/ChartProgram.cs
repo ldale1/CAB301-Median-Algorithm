@@ -16,9 +16,6 @@ namespace ChartApp
         [STAThread]
         static void Main()
         { 
-            double[] simpleMedian = new double[] { 1, 2, 3, 4, 5 };
-            double output = Median.BruteForceMedian(simpleMedian);
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new ChartForm());
