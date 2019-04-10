@@ -108,7 +108,6 @@ namespace ChartApp
             String seriesName = axisType == AxisType.Primary ? "y1" : "y2";
             // Max scale value
             double scale = Math.Min(Math.Pow(10, (int)Math.Log10(points.Max())), 100);
-            Console.WriteLine(scale);
             int val = (int)(Math.Ceiling(points.Max() / scale) * scale);
             //
             if (axisType == AxisType.Primary)
