@@ -104,7 +104,7 @@ namespace ChartApp
             ChartArea chartArea = EfficiencyChart.ChartAreas[0];
             String seriesName = axisType == AxisType.Primary ? "y1" : "y2";
             // Max scale value
-            double scale = Math.Max(Math.Pow(10, (int)Math.Log10(points.Max()))/10, 10);
+            double scale = Math.Max(Math.Pow(10, (int)Math.Log10(points.Max()))/10, 1);
             int val = (int)Math.Max((Math.Ceiling(points.Max() / scale) * scale), 1);
             //
             if (axisType == AxisType.Primary)
@@ -129,7 +129,7 @@ namespace ChartApp
             try
             {
                 EfficiencyChart.Series[seriesName + "-oh"].Points.DataBindXY(y1_oh.Item1, y1_oh.Item2);
-                EfficiencyChart.Series[seriesName + "-oh"].LegendText = String.Format("O({0}) : {1}x^2", subtitle, Math.Round(y1_oh.Item3, 2));
+                EfficiencyChart.Series[seriesName + "-oh"].LegendText = String.Format("O({0}) : {1}x^2", subtitle, Math.Round(y1_oh.Item3, 4));
             }
             catch (Exception exc)
             {
@@ -169,7 +169,7 @@ namespace ChartApp
             bool tuning;
             do {
                 g += 0.0002;
-                vals = Enumerable.Range(1, x_series.Length).Select(x => g * x * x + offset*15).ToArray();
+                vals = Enumerable.Range(1, x_series.Length).Select(x => g * x * x + offset * 7).ToArray();
                 tuning = vals.Where(val => val < x_series[Array.IndexOf(vals, val)]).Any(); // While any point < x_series
                 breakCounter--;
             } while (tuning && breakCounter > 0) ;
@@ -187,7 +187,7 @@ namespace ChartApp
             do
             {
                 g -= 0.0002;
-                vals = Enumerable.Range(1, x_series.Length).Select(x => g * x * x - 1).ToArray();
+                vals = Enumerable.Range(1, x_series.Length).Select(x => g * x * x-1).ToArray();
                 tuning = vals.Where(val => val > x_series[Array.IndexOf(vals, val)]).Any(); // While any point > x_series
                 breakCounter--;
             } while (tuning && breakCounter > 0);
