@@ -105,7 +105,7 @@ namespace ChartApp
             String seriesName = axisType == AxisType.Primary ? "y1" : "y2";
             // Max scale value
             double scale = Math.Max(Math.Pow(10, (int)Math.Log10(points.Max()))/10, 10);
-            int val = (int)(Math.Ceiling(points.Max() / scale) * scale);
+            int val = (int)Math.Max((Math.Ceiling(points.Max() / scale) * scale), 1);
             //
             if (axisType == AxisType.Primary)
             {
@@ -149,9 +149,20 @@ namespace ChartApp
         }
 
         // Upper bound
+        private int get_startOh(double[] x_series)
+        {
+            try
+            {
+                return Math.Max(x_series.ToList().IndexOf(x_series.Where(val => val > 0).ToArray()[0]), 0);
+            } catch (IndexOutOfRangeException exc)
+            {
+                Console.WriteLine(exc);
+                return 0;
+            }
+        }
         private Tuple<int[], double[], double> bestfit_oh(double[] x_series)
         {
-            int startOh = Math.Max(x_series.ToList().IndexOf(x_series.Where(val => val > 0).ToArray()[0]), 0);
+            int startOh = get_startOh(x_series);
             double offset = x_series[startOh];
             x_series = x_series.Skip(startOh).Take(x_series.Length - startOh).Select(x => x - offset).ToArray();
             double g = 0.0002;
@@ -169,10 +180,10 @@ namespace ChartApp
         // Lower bound
         private Tuple<int[], double[], double> bestfit_omega(double[] x_series)
         {
-            int startOh = Math.Max(x_series.ToList().LastIndexOf(0), 0);
+            int startOh = get_startOh(x_series);
             x_series = x_series.Skip(startOh).Take(x_series.Length - startOh).ToArray();
             double g = 2;
-            int breakCounter = 1000;
+            int breakCounter = 10000;
             double[] vals;
             bool tuning;
             do
@@ -180,12 +191,9 @@ namespace ChartApp
                 vals = Enumerable.Range(1, x_series.Length).Select(x => g * x * x  - 1).ToArray();
                 tuning = vals.Where(val => val > x_series[Array.IndexOf(vals, val)]).Any(); // While any point > x_series
                 // Loop updating
-                g -= 0.002;
+                g -= 0.0002;
                 breakCounter--;
             } while (tuning && breakCounter > 0);
-
-            Console.WriteLine(tuning);
-
             return Tuple.Create(Enumerable.Range(startOh + 1, x_series.Length).ToArray(), vals, g + 0.002);
         }
 
