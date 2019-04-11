@@ -8,6 +8,7 @@ namespace MedianAlgorithm
     {
         static Random rnd = new Random();
 
+        // Return a random array of doubles between two numbers
         private static double[] randomArray(int size, int lower, int upper)
         {
             return (from number in Enumerable.Range(0, size) select (double)rnd.Next(lower, upper + 1)).ToArray();
@@ -41,10 +42,10 @@ namespace MedianAlgorithm
                 end = DateTime.Now;
 
                 // Aggreggate Time
-                executionTime += (end - start).Ticks / (10 *iterations);
+                executionTime += (end - start).Ticks;
 
             }
-            return executionTime;
+            return executionTime / (10 * iterations);
 
         }
 
