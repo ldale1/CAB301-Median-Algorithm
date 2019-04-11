@@ -58,28 +58,6 @@ namespace MedianAlgorithm
 
             Console.WriteLine("BASICS:");
             Console.WriteLine("{0} [ops]\n", countBasics(100, 100));
-
-            double[] x_series = new double[] { 0, 0, 0, 1, 2, 4 };
-            int startOh = x_series.ToList().LastIndexOf(0);
-            x_series = x_series.Skip(startOh + 1).Take(x_series.Length - startOh).ToArray();
-
-            double g = 2;
-            int breakCounter = 100;
-            double[] vals;
-            bool tuning;
-            do
-            {
-                vals = Enumerable.Range(1, x_series.Length).Select(x => g * x * x - 1).ToArray();
-                tuning = vals.Where(val => val > x_series[Array.IndexOf(vals, val)]).Any(); // While any point > x_series
-                                                                                            // Loop updating
-                g -= 0.025;
-                breakCounter--;
-            } while (tuning && breakCounter > 0);
-
-            Console.WriteLine(String.Join(",", vals) + " ---- " + g.ToString());
-
-            Console.WriteLine();
-            Console.ReadLine();
         }
     }
 }
