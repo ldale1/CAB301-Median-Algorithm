@@ -67,6 +67,7 @@ namespace MedianAlgorithm
                     }
                     else
                     {
+                        counter++;
                         if (A[j] == A[i])
                         {
                             numequal++;

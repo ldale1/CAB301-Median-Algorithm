@@ -149,20 +149,18 @@ namespace ChartApp
         }
 
         // Upper bound
-        private int get_startOh(double[] x_series)
-        {
-            try
-            {
-                return Math.Max(x_series.ToList().IndexOf(x_series.Where(val => val > 0).ToArray()[0]), 0);
-            } catch (IndexOutOfRangeException exc)
-            {
-                Console.WriteLine(exc);
-                return 0;
-            }
-        }
         private Tuple<int[], double[], double> bestfit_oh(double[] x_series)
         {
-            int startOh = get_startOh(x_series);
+            int startOh;
+            try
+            {
+                startOh = Math.Max(x_series.ToList().IndexOf(x_series.Where(val => val > 0).ToArray()[0]), 0);
+            }
+            catch (IndexOutOfRangeException exc)
+            {
+                Console.WriteLine(exc);
+                startOh = 0;
+            }
             double offset = x_series[startOh];
             x_series = x_series.Skip(startOh).Take(x_series.Length - startOh).Select(x => x - offset).ToArray();
             double g = 0.0002;
@@ -170,7 +168,7 @@ namespace ChartApp
             double[] vals;
             bool tuning;
             do {
-                vals = Enumerable.Range(1, x_series.Length).Select(x => g * x * x + offset*0.2).ToArray();
+                vals = Enumerable.Range(1, x_series.Length).Select(x => g * x * x + offset*3).ToArray();
                 tuning = vals.Where(val => val < x_series[Array.IndexOf(vals, val)]).Any(); // While any point < x_series
                 g += 0.0002;
                 breakCounter--;
@@ -180,7 +178,7 @@ namespace ChartApp
         // Lower bound
         private Tuple<int[], double[], double> bestfit_omega(double[] x_series)
         {
-            int startOh = get_startOh(x_series);
+            int startOh = Math.Max(x_series.ToList().LastIndexOf(0), 0);
             x_series = x_series.Skip(startOh).Take(x_series.Length - startOh).ToArray();
             double g = 2;
             int breakCounter = 10000;
@@ -188,7 +186,7 @@ namespace ChartApp
             bool tuning;
             do
             {
-                vals = Enumerable.Range(1, x_series.Length).Select(x => g * x * x  - 1).ToArray();
+                vals = Enumerable.Range(1, x_series.Length).Select(x => g * x * x - 1).ToArray();
                 tuning = vals.Where(val => val > x_series[Array.IndexOf(vals, val)]).Any(); // While any point > x_series
                 // Loop updating
                 g -= 0.0002;
