@@ -169,7 +169,7 @@ namespace ChartApp
             bool tuning;
             do {
                 g += 0.0002;
-                vals = Enumerable.Range(1, x_series.Length).Select(x => g * x * x + offset * 7).ToArray();
+                vals = Enumerable.Range(1, x_series.Length).Select(x => g * x * x + offset * 9).ToArray();
                 tuning = vals.Where(val => val < x_series[Array.IndexOf(vals, val)]).Any(); // While any point < x_series
                 breakCounter--;
             } while (tuning && breakCounter > 0) ;
