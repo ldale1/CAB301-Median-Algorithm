@@ -1,13 +1,10 @@
 ﻿using MedianAlgorithm;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
@@ -102,12 +99,12 @@ namespace ChartApp
                 toggle_series(EfficiencyChart.Series[seriesName], onoff);
             }
         }
-        private void axis_bind(double[] points, String subtitle, String axistitle, AxisType axisType, bool bf = true)
+        private void axis_bind(double[] points, String subtitle, String axistitle, AxisType axisType)
         {
             ChartArea chartArea = EfficiencyChart.ChartAreas[0];
             String seriesName = axisType == AxisType.Primary ? "y1" : "y2";
             // Max scale value
-            double scale = Math.Min(Math.Pow(10, (int)Math.Log10(points.Max())), 100);
+            double scale = Math.Max(Math.Pow(10, (int)Math.Log10(points.Max()))/10, 10);
             int val = (int)(Math.Ceiling(points.Max() / scale) * scale);
             //
             if (axisType == AxisType.Primary)
@@ -125,39 +122,34 @@ namespace ChartApp
             EfficiencyChart.Series[seriesName].Points.DataBindXY(x_series, points);
             EfficiencyChart.Series[seriesName].LegendText = subtitle;
 
-            // Bestfit fit
-            if (bf)
+            toggle_series(EfficiencyChart.Series[seriesName + "-oh"], true);
+            toggle_series(EfficiencyChart.Series[seriesName + "-omega"], true);
+
+            Tuple<int[], double[], double> y1_oh = bestfit_oh(points);
+            try
             {
-                toggle_series(EfficiencyChart.Series[seriesName + "-oh"], true);
-                toggle_series(EfficiencyChart.Series[seriesName + "-omega"], true);
-
-                Tuple<int[], double[]> y1_oh = bestfit_oh(points);
-                try
-                {
-                    EfficiencyChart.Series[seriesName + "-oh"].Points.DataBindXY(y1_oh.Item1, y1_oh.Item2);
-                    EfficiencyChart.Series[seriesName + "-oh"].LegendText = String.Format("O({0})", subtitle);
-                }
-                catch (Exception exc)
-                {
-                    Console.WriteLine(exc);
-                }
-
-                Tuple<int[], double[]> y1_omega = bestfit_omega(points);
-                try { 
-                    EfficiencyChart.Series[seriesName + "-omega"].Points.DataBindXY(y1_omega.Item1, y1_omega.Item2);
-                    EfficiencyChart.Series[seriesName + "-omega"].LegendText = String.Format("Ω({0})", subtitle);
-                } catch (Exception exc)
-                {
-                    Console.WriteLine(exc);
-                }
-            } else {
+                EfficiencyChart.Series[seriesName + "-oh"].Points.DataBindXY(y1_oh.Item1, y1_oh.Item2);
+                EfficiencyChart.Series[seriesName + "-oh"].LegendText = String.Format("O({0}) : {1}x^2", subtitle, Math.Round(y1_oh.Item3, 2));
+            }
+            catch (Exception exc)
+            {
                 toggle_series(EfficiencyChart.Series[seriesName + "-oh"], false);
+                Console.WriteLine(exc);
+            }
+
+            Tuple<int[], double[], double> y1_omega = bestfit_omega(points);
+            try { 
+                EfficiencyChart.Series[seriesName + "-omega"].Points.DataBindXY(y1_omega.Item1, y1_omega.Item2);
+                EfficiencyChart.Series[seriesName + "-omega"].LegendText = String.Format("Ω({0}) : {1}x^2", subtitle, Math.Round(y1_omega.Item3, 2));
+            } catch (Exception exc)
+            {
                 toggle_series(EfficiencyChart.Series[seriesName + "-omega"], false);
+                Console.WriteLine(exc);
             }
         }
 
         // Upper bound
-        private Tuple<int[], double[]> bestfit_oh(double[] x_series)
+        private Tuple<int[], double[], double> bestfit_oh(double[] x_series)
         {
             int startOh = Math.Max(x_series.ToList().IndexOf(x_series.Where(val => val > 0).ToArray()[0]), 0);
             double offset = x_series[startOh];
@@ -172,10 +164,10 @@ namespace ChartApp
                 g += 0.0002;
                 breakCounter--;
             } while (tuning && breakCounter > 0) ;
-            return Tuple.Create(Enumerable.Range(startOh + 1, x_series.Length).ToArray(), vals.Select(x => x + offset).ToArray());
+            return Tuple.Create(Enumerable.Range(startOh + 1, x_series.Length).ToArray(), vals.Select(x => x + offset).ToArray(), g - 0.0002);
         }
         // Lower bound
-        private Tuple<int[], double[]> bestfit_omega(double[] x_series)
+        private Tuple<int[], double[], double> bestfit_omega(double[] x_series)
         {
             int startOh = Math.Max(x_series.ToList().LastIndexOf(0), 0);
             x_series = x_series.Skip(startOh).Take(x_series.Length - startOh).ToArray();
@@ -194,7 +186,7 @@ namespace ChartApp
 
             Console.WriteLine(tuning);
 
-            return Tuple.Create(Enumerable.Range(startOh + 1, x_series.Length).ToArray(), vals);
+            return Tuple.Create(Enumerable.Range(startOh + 1, x_series.Length).ToArray(), vals, g + 0.002);
         }
 
         // Update the chart
@@ -246,7 +238,7 @@ namespace ChartApp
         {
             // Open a save box
             SaveFileDialog saveDialog = new SaveFileDialog();
-            saveDialog.InitialDirectory = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Directory.GetCurrentDirectory())));
+            saveDialog.InitialDirectory = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Directory.GetCurrentDirectory()))) + "\\Charts\\";
             saveDialog.Title = "Save Chart";
             saveDialog.FileName = "mychart";
             saveDialog.DefaultExt = "jpg";
@@ -260,23 +252,22 @@ namespace ChartApp
 
                 // Save from the chart object itself
                 EfficiencyChart.SaveImage(saveDialog.FileName, ChartImageFormat.Png);
-
                 
                 /* Get a consistent output */
                 // Fonts
                 float fontscaler = 0.6f;
-                EfficiencyChart.Titles["Title"].Font = new Font("Arial", 48 * fontscaler, FontStyle.Bold);
-                EfficiencyChart.Titles["InfoTitle"].Font = new Font("Arial", 24 * fontscaler);
+                EfficiencyChart.Titles["Title"].Font = new Font("Arial", 40 * fontscaler, FontStyle.Bold);
+                EfficiencyChart.Titles["InfoTitle"].Font = new Font("Arial", 22 * fontscaler);
                 ChartArea chartArea = EfficiencyChart.ChartAreas[0];
                 Font tickFont = new Font("Arial", 24 * fontscaler, FontStyle.Bold);
                 chartArea.AxisX.LabelStyle.Font = tickFont;
                 chartArea.AxisY.LabelStyle.Font = tickFont;
                 chartArea.AxisY2.LabelStyle.Font = tickFont;
-                Font labelFont = new Font("Arial", 32 * fontscaler, FontStyle.Bold);
+                Font labelFont = new Font("Arial", 28 * fontscaler, FontStyle.Bold);
                 chartArea.AxisX.TitleFont = labelFont;
                 chartArea.AxisY.TitleFont = labelFont;
                 chartArea.AxisY2.TitleFont = labelFont;
-                EfficiencyChart.Legends[0].Font = new Font("Arial", 28 * fontscaler);
+                EfficiencyChart.Legends[0].Font = new Font("Arial", 26 * fontscaler);
 
                 // Higher resolution
                 int newWidth = 1600;
