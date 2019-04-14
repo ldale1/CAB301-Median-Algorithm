@@ -35,7 +35,7 @@ namespace MedianAlgorithm
                         }
                     }
                 }
-
+                // If the range of this number falls on the median
                 if ((numsmaller < k) && (k <= (numsmaller + numequal)))
                 {
                     return A[i];
@@ -74,7 +74,7 @@ namespace MedianAlgorithm
                         }
                     }
                 }
-
+                // If the range of this number falls on the median
                 if ((numsmaller < k) && (k <= (numsmaller + numequal)))
                 {
                     return counter;
@@ -82,47 +82,5 @@ namespace MedianAlgorithm
             }
             throw new ArgumentException("Something went wrong");
         }
-
-        ///// <summary> Brute force method to find the median of an array  <paramref name="A"/> of n numbers. Counts time. </summary>
-        ///// <param name="A">Array to find the median of</param>
-        ///// <returns>  Returns the time taken for the function to execute </returns>
-        //public static double BruteForceMedianTime(double[] A)
-        //{
-        //    Stopwatch sw = new Stopwatch();
-            
-
-        //    int n = A.Length;
-        //    double k = Math.Abs(n / 2.0);
-
-        //    for (int i = 0; i < n; i++)
-        //    {
-        //        int numsmaller = 0; // How many elements are smaller than A[i]
-        //        int numequal = 0;   // How many elements are equal to A[i]
-
-        //        for (int j = 0; j < n; j++)
-        //        {
-        //            sw.Start();
-        //            if (A[j] < A[i])
-        //            {
-        //                sw.Stop();
-        //                numsmaller++;
-        //            }
-        //            else
-        //            {
-        //                sw.Stop();
-        //                if (A[j] == A[i])
-        //                {
-        //                    numequal++;
-        //                }
-        //            }
-        //        }
-
-        //        if ((numsmaller < k) && (k <= (numsmaller + numequal)))
-        //        {
-        //            return sw.ElapsedMilliseconds;
-        //        }
-        //    }
-        //    throw new ArgumentException("Something went wrong");
-        //}
     }
 }
