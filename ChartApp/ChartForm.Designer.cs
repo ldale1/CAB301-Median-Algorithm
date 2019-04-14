@@ -107,7 +107,7 @@
             // 
             this.DataPointsUpDown.Location = new System.Drawing.Point(13, 168);
             this.DataPointsUpDown.Maximum = new decimal(new int[] {
-            50000,
+            100000,
             0,
             0,
             0});

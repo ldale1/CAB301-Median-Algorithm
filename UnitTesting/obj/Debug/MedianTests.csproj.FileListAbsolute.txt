@@ -1,0 +1,15 @@
+D:\CAB301\MedianAlgorithm\UnitTesting\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+D:\CAB301\MedianAlgorithm\UnitTesting\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+D:\CAB301\MedianAlgorithm\UnitTesting\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+D:\CAB301\MedianAlgorithm\UnitTesting\bin\Debug\UnitTestProject1.dll
+D:\CAB301\MedianAlgorithm\UnitTesting\bin\Debug\UnitTestProject1.pdb
+D:\CAB301\MedianAlgorithm\UnitTesting\bin\Debug\MedianAlgorithm.exe
+D:\CAB301\MedianAlgorithm\UnitTesting\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
+D:\CAB301\MedianAlgorithm\UnitTesting\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
+D:\CAB301\MedianAlgorithm\UnitTesting\bin\Debug\MedianAlgorithm.pdb
+D:\CAB301\MedianAlgorithm\UnitTesting\bin\Debug\MedianAlgorithm.exe.config
+D:\CAB301\MedianAlgorithm\UnitTesting\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
+D:\CAB301\MedianAlgorithm\UnitTesting\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
+D:\CAB301\MedianAlgorithm\UnitTesting\obj\Debug\MedianTests.csprojResolveAssemblyReference.cache
+D:\CAB301\MedianAlgorithm\UnitTesting\obj\Debug\UnitTestProject1.dll
+D:\CAB301\MedianAlgorithm\UnitTesting\obj\Debug\UnitTestProject1.pdb

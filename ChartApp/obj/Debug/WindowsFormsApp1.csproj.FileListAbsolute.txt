@@ -1,0 +1,12 @@
+D:\CAB301\MedianAlgorithm\WindowsFormsApp1\bin\Debug\WindowsFormsApp1.exe.config
+D:\CAB301\MedianAlgorithm\WindowsFormsApp1\bin\Debug\WindowsFormsApp1.exe
+D:\CAB301\MedianAlgorithm\WindowsFormsApp1\bin\Debug\WindowsFormsApp1.pdb
+D:\CAB301\MedianAlgorithm\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csprojResolveAssemblyReference.cache
+D:\CAB301\MedianAlgorithm\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.Properties.Resources.resources
+D:\CAB301\MedianAlgorithm\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.csproj.GenerateResource.Cache
+D:\CAB301\MedianAlgorithm\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.exe
+D:\CAB301\MedianAlgorithm\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.pdb
+D:\CAB301\MedianAlgorithm\WindowsFormsApp1\bin\Debug\MedianAlgorithm.exe
+D:\CAB301\MedianAlgorithm\WindowsFormsApp1\bin\Debug\MedianAlgorithm.pdb
+D:\CAB301\MedianAlgorithm\WindowsFormsApp1\bin\Debug\MedianAlgorithm.exe.config
+D:\CAB301\MedianAlgorithm\WindowsFormsApp1\obj\Debug\WindowsFormsApp1.ChartForm.resources
