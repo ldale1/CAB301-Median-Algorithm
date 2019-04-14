@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 
 
@@ -24,25 +25,20 @@ namespace MedianAlgorithm
 
         public static double countTime(int size, int iterations)
         {
-            DateTime start, end;
+            Stopwatch stopWatch = new Stopwatch();
             int randUpper = (int)Math.Floor(size / 2.0);
             double output;
             double[] A;
-            double executionTime = 0;
             for (int i = 0; i < iterations; i++)
             {
                 A = randomArray(size, -randUpper, randUpper);
 
                 // Time over algorithm
-                start = DateTime.Now;
+                stopWatch.Start();
                 output = Median.BruteForceMedian(A);
-                end = DateTime.Now;
-
-                // Aggreggate Time
-                executionTime += (end - start).Ticks;
-
+                stopWatch.Stop();
             }
-            return executionTime / (10 * iterations);
+            return stopWatch.ElapsedTicks/(10*iterations);
 
         }
 
